@@ -152,3 +152,13 @@ Thumbs.db
 
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# contains pyrogram auth
+config.ini
+*.session
+
+# useless images
+resources/emojis
+
+# editor files
+*.swp
