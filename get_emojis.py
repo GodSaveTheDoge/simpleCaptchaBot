@@ -22,7 +22,7 @@ emojiTypesMap = {
     "S": ("samsung",),
     "SB": ("softbank",),
 }
-emojiTypesMap["ALL"] = tuple(emojiTypesMap.values())
+emojiTypesMap["ALL"] = tuple(i[0] for i in emojiTypesMap.values())
 
 
 def main() -> int:
