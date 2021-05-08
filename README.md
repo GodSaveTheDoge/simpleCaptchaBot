@@ -7,14 +7,21 @@ Everything needed is saved in the buttons of the message encrypted with AES-IGE 
 
 # Setup
 - Clone the repo
-`git clone https://github.com/GodSaveTheDoge/simpleCaptchaBot`
-`cd simpleCaptchaBot`
+```bash
+git clone https://github.com/GodSaveTheDoge/simpleCaptchaBot && cd simpleCaptchaBot
+```
 - Install dependencies
-`pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 - Create a bot and get the token. Change the token in config.ini
 - (Optional) Go to https://my.telegram.org/apps, create a new app and change api_id/api_hash in config.ini
 - Download emojis (Note that this might take some time)
-`python get_emojis.py`
+```bash
+python get_emojis.py
+```
 - (Optional) Remove the backgrounds in resources/backgrounds and put your own
 - Run it
-`python -m simpleCaptcha`
+```bash
+python -m simpleCaptcha
+```
