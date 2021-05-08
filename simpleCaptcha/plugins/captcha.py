@@ -135,7 +135,7 @@ def on_captcha_attempt(client: Client, cbQuery: CallbackQuery) -> None:
         cbQuery.message.delete()
         return
     
-    if step >= 2 and cbQuery.from_user.first_name != "Aes": # TODO: leva
+    if step >= 2:
         client.restrict_chat_member(
             cbQuery.message.chat.id,
             userId,
