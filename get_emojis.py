@@ -7,6 +7,7 @@ import pyrogram.emoji
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
 
 emojiTypesMap = {
     "A": ("apple",),
@@ -23,6 +24,37 @@ emojiTypesMap = {
     "SB": ("softbank",),
 }
 emojiTypesMap["ALL"] = tuple(i[0] for i in emojiTypesMap.values())
+
+
+def download_emoji(emojiType, imgTag):
+    print(f"Downloading {emojiType} - {imgTag.attrs.get('alt')}")
+    emojiPath = (
+        Path("resources")
+        / "emojis"
+        / (
+            imgTag.attrs.get("alt")
+            .upper()
+            .replace(" ", "_")
+            .replace(":", "_")
+            .replace("-", "_")
+            .replace(",", "")
+            .replace("__", "_")
+            + "-"
+            + emojiType
+            + ".png"
+        )
+    )
+    if os.path.exists(emojiPath):
+        print(f"Skipped! This emoji has already been downloaded.")
+        return
+    emojiImg = Image.open(
+        BytesIO(
+            requests.get(
+                imgTag.attrs.get("data-src") or imgTag.attrs.get("src")
+            ).content
+        )
+    )
+    emojiImg.resize((100, 100)).convert("RGBA").save(emojiPath)
 
 
 def main() -> int:
@@ -51,41 +83,12 @@ def main() -> int:
         print("Invalid choice!")
         emojiTypes = input("> ").upper()
 
-    for emojiType in emojiTypesMap[emojiTypes]:
-        for imgTag in BeautifulSoup(
-            requests.get("https://emojipedia.org/" + emojiType).text, "html.parser"
-        ).select("img"):
-
-            print(f"Downloading {emojiType} - {imgTag.attrs.get('alt')}")
-            emojiPath = (
-                Path("resources")
-                / "emojis"
-                / (
-                    imgTag.attrs.get("alt")
-                    .upper()
-                    .replace(" ", "_")
-                    .replace(":", "_")
-                    .replace("-", "_")
-                    .replace(",", "")
-                    .replace("__", "_")
-                    + "-"
-                    + emojiType
-                    + ".png"
-                )
-            )
-
-            if os.path.exists(emojiPath):
-                print(f"Skipped! This emoji has already been downloaded.")
-                continue
-
-            emojiImg = Image.open(
-                BytesIO(
-                    requests.get(
-                        imgTag.attrs.get("data-src") or imgTag.attrs.get("src")
-                    ).content
-                )
-            )
-            emojiImg.resize((100, 100)).convert("RGBA").save(emojiPath)
+    with ThreadPoolExecutor(max_workers=20) as thPool:
+        for emojiType in emojiTypesMap[emojiTypes]:
+            for imgTag in BeautifulSoup(
+                requests.get("https://emojipedia.org/" + emojiType).text, "html.parser"
+            ).select("img"):
+                thPool.submit(download_emoji, emojiType, imgTag)
 
     for emojiFName in os.listdir(Path("resources") / "emojis"):
         try:
