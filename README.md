@@ -1,5 +1,5 @@
 # SimpleCaptcha
-A stateless simple captcha bot
+A stateless captcha bot
 
 # What is this
 This is a bot that, when added to your group as administrator, requires new users to complete a captcha before allowing them to chat.
