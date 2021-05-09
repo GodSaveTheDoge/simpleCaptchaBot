@@ -19,7 +19,9 @@ pip install -r requirements.txt
 - Download emojis (Note that this might take some time)
 ```bash
 python get_emojis.py
+#
 # or
+#
 wget "https://github.com/GodSaveTheDoge/simpleCaptchaBot/releases/download/emoji-release/apple.zip" && \
 mkdir -p resources/emojis && \
 unzip apple.zip -d resources/emojis
